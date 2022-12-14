@@ -3,8 +3,8 @@
     <div v-for="(sort, index) in setSorts()" class="sort_element">
       <button
         @click="
-          setSortValue(sort.name.toLowerCase());
-          sort.action();
+          selectSort(sort.name.toLowerCase());
+          sendQuery();
         "
         :class="sortSelect.toLowerCase() == sort.name.toLowerCase() ? 'selected' : ''"
       >
@@ -13,86 +13,136 @@
       <div v-if="index < setSorts().length - 1" class="separator"></div>
     </div>
   </nav>
+  <div class="function-container--not-logged" v-if="!logged">
+    <div class="not-logged__search-container">
+      <input
+        v-model="search"
+        type="search"
+        name="search"
+        class="search"
+        autocomplete="off"
+      />
+      <Search @click="sendQuery()" class="search_icon" />
+    </div>
+  </div>
+  <div class="function_container" v-if="logged">
+    <div class="search_container">
+      <input
+        v-model="search"
+        type="search"
+        name="search"
+        class="search"
+        autocomplete="off"
+      />
+      <Search @click="sendQuery()" class="search_icon" />
+    </div>
+    <button
+      class="btn btn--save-post"
+      v-if="!createNewPost"
+      @click="createNewPost = true"
+    >
+      Create Post
+    </button>
+    <button class="btn btn--save-post" v-if="createNewPost" @click="saveNewPost()">
+      Save Post
+    </button>
+    <button class="btn btn--cancel-post" v-if="createNewPost" @click="cancelNewPost()">
+      Cancel
+    </button>
+  </div>
+  <div v-if="createNewPost" class="create_post_container">
+    <CreatePost
+      @update-data-new-post="updateDataNewPost"
+      style="animation: fade-in-out 0.5s ease-in-out both"
+    />
+  </div>
   <div class="posts_container">
-    <article>
-      <h1>Title</h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus, numquam?
-      </p>
-    </article>
-    <article>
-      <h1>Title</h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus, numquam?
-      </p>
-    </article>
-    <article>
-      <h1>Title</h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus, numquam?
-      </p>
-    </article>
-    <article>
-      <h1>Title</h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus, numquam?
-      </p>
-    </article>
+    <PostListItem
+      v-for="(post, index) in posts"
+      :key="index"
+      :post="post"
+      style="animation: fade-in-out 0.5s ease-in-out both"
+      :style="`animation-delay: ${index * 0.1}s;`"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, reactive } from "vue";
 import { useRoute } from "vue-router";
+import store from "../store";
+
+import PostListItem from "../components/PostListItem.vue";
+import CreatePost from "../components/CreatePost.vue";
+import Search from "../components/icons/Search.vue";
 
 const route = useRoute();
 
-const Actions = {
-  latest() {
-    console.log("Latest");
-  },
-  oldest() {
-    console.log("Oldest");
-  },
-  mostLikes() {
-    console.log("Most Likes");
-  },
-  youLike() {
-    console.log("You Like");
-  },
-  your() {
-    console.log("Your");
-  },
-};
+const createNewPost = ref(false);
 
 const sorts = [
-  { name: "Latest", afterLogin: false, action: Actions.latest },
-  { name: "Oldest", afterLogin: false, action: Actions.oldest },
-  { name: "Most Likes", afterLogin: false, action: Actions.mostLikes },
-  { name: "You Like", afterLogin: true, action: Actions.youLike },
-  { name: "Your", afterLogin: true, action: Actions.your },
+  { name: "Latest", afterLogin: false },
+  { name: "Oldest", afterLogin: false },
+  { name: "Most Likes", afterLogin: false },
+  { name: "You Like", afterLogin: true },
+  { name: "Your", afterLogin: true },
+  { name: "Your Friends", afterLogin: true },
 ];
-const logged = ref(true);
 
-let sortSelect = ref("Latest");
+const posts = computed(() => store.state.posts.data);
+const logged = computed(() => store.state.user.logged);
+const newPost = reactive({});
+
+store.dispatch("getPosts");
+
+let sortSelect = ref("latest");
+let search = ref("");
 
 function setSorts() {
   return this.sorts.filter((sort) => {
     return sort.afterLogin === this.logged || sort.afterLogin === false;
   });
 }
-function setSortValue(value) {
+
+function selectSort(value) {
   this.sortSelect = value;
 }
 
-Actions.latest();
+function sendQuery() {
+  // store.dispatch("getPosts", {sort: value, search: search});
+  console.log({ sort: sortSelect.value, search: search.value.toLowerCase() });
+}
+
+function saveNewPost() {
+  if (newPost.value.title && newPost.value.content) {
+    store.dispatch("savePost", {
+      title: newPost.value.title,
+      content: newPost.value.content,
+    });
+    console.log({ title: newPost.value.title, content: newPost.value.content });
+    newPost.value = "";
+    createNewPost.value = false;
+  } else {
+    console.log("wrong data"); // alert o złych danych
+  }
+}
+
+function cancelNewPost() {
+  newPost.value = "";
+  createNewPost.value = false;
+}
+
+function updateDataNewPost(value) {
+  newPost.value = value;
+}
+
+sendQuery();
 </script>
 
 <style scoped>
 .posts_container {
   display: grid;
-  gap: 10px;
-  grid-template-columns: 1fr;
+  gap: 14px;
 }
 .sort_element {
   display: flex;
@@ -107,6 +157,7 @@ button {
   border-radius: 5px;
   background-color: var(--dark-white);
   padding: 8px 10px;
+  transition: 0.1s;
 }
 .separator {
   width: 2px;
@@ -131,7 +182,83 @@ nav {
 article {
   background-color: white;
 }
+.function_container {
+  display: flex;
+  margin: 5px;
+  gap: 10px;
+  flex-direction: column;
+}
+.search_container {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.search {
+  flex: 1;
+  height: 35px;
+  font-size: 19px;
+  border: 1px solid;
+  border-radius: 5px;
+}
+.btn {
+  font-weight: 600;
+  color: var(--white);
+  height: 40px;
+  transition: 0.1s;
+  padding: 0px 20px;
+}
+.btn--save-post {
+  background-color: var(--light-gray);
+}
+
+.btn--save-post:hover {
+  background-color: var(--gray);
+}
+.search_icon {
+  width: 35px;
+  height: 35px;
+  margin: 0px 5px;
+  cursor: pointer;
+}
+.create_post_container {
+  margin-bottom: 15px;
+  height: 0px;
+  animation: area-growing 0.4s ease-in-out both alternate;
+}
+.btn--cancel-post {
+  background-color: var(--red-1);
+  box-sizing: border-box;
+}
+.btn--cancel-post:hover {
+  background-color: var(--red-2);
+}
+.not-logged__search-container {
+  display: flex;
+  margin-bottom: 10px;
+  flex: 1;
+}
+.function-container--not-logged {
+  display: flex;
+  justify-content: center;
+  margin: 5px;
+  gap: 10px;
+}
+@keyframes area-growing {
+  from {
+    height: 0px;
+    opacity: 0;
+  }
+  to {
+    height: 250px;
+    opacity: 1;
+  }
+}
+
 @media (min-width: 768px) {
+  .search_container {
+    justify-content: start;
+  }
   nav {
     margin: 10px 0px;
   }
@@ -141,7 +268,6 @@ article {
     background-color: transparent;
     border: none;
     border-radius: 5px;
-    padding: 8px 10px;
   }
   .selected {
     background-color: transparent;
@@ -164,6 +290,35 @@ article {
   }
   .sort_element div {
     display: inline-block;
+  }
+  .function_container {
+    justify-content: flex-end;
+    flex-direction: row;
+    position: relative;
+  }
+
+  .search {
+    flex: none;
+    width: 350px;
+  }
+  .create_post_container {
+    display: flex;
+    justify-content: center;
+  }
+  .not-logged__search-container {
+    margin-left: 40px;
+    justify-content: center;
+    flex: auto;
+  }
+}
+@media (min-width: 1024px) {
+  .search_container {
+    position: absolute;
+    justify-content: center;
+    left: 35%;
+  }
+  .search_container .search {
+    width: 350px;
   }
 }
 </style>

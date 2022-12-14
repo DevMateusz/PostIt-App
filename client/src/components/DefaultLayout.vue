@@ -1,6 +1,6 @@
 <template>
   <div class="screen">
-    <nav>
+    <nav style="animation: fade-in-out 0.5s ease-in-out both">
       <div class="menu">
         <div class="logo">
           <Logo size="4" />
@@ -17,22 +17,29 @@
         </div>
       </div>
     </nav>
-    <main>
+    <main style="animation: fade-in-out 0.5s ease-in-out both">
       <router-view> </router-view>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Logo from "../components/icons/Logo.vue";
+import store from "../store";
+
 const actions = [
-  { name: "Log In", class: "extra_button", afterLogin: false, to: { name: "HomeView" } },
+  {
+    name: "Log In",
+    class: "extra_button",
+    afterLogin: false,
+    to: { name: "LoginView" },
+  },
   {
     name: "Sign Up",
     class: "default_button",
     afterLogin: false,
-    to: { name: "HomeView" },
+    to: { name: "RegisterView" },
   },
   {
     name: "Log out",
@@ -41,13 +48,13 @@ const actions = [
     to: { name: "HomeView" },
   },
 ];
-const logged = ref(true);
+const logged = computed(() => store.state.user.logged);
 </script>
 
 <style scoped>
 .screen {
-  min-height: 100vh;
-  min-width: 100vw;
+  height: 100%;
+  width: 100%;
 }
 .menu,
 main {
@@ -79,14 +86,14 @@ nav {
 .extra_button {
   padding: 8px 20px;
   border-radius: 5px;
-  font-weight: 500;
   transition: 0.2s;
+  font-weight: 600;
 }
 .default_button {
-  background-color: var(--green-2);
+  background-color: var(--green-1);
 }
 .default_button:hover {
-  background-color: var(--green-1);
+  background-color: var(--green-2);
 }
 .extra_button {
   color: var(--white);
