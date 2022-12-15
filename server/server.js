@@ -15,7 +15,8 @@ app.use(logger);
 app.use(cors(corsOptions));
 app.use(express.json());
 
-
+app.use('/register', require('./routes/register'));
+app.use('/login', require('./routes/login'));
 
 app.all('*', (req ,res) => {
   res.status(404);

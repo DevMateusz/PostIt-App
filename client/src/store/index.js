@@ -79,9 +79,9 @@ const tempData = [
 const store = createStore({
   state: {
     user: {
-      data: {},
-      token: {},
-      logged: true,
+      data: JSON.parse(sessionStorage.getItem('USER')),
+      token: sessionStorage.getItem('TOKEN'),
+      logged: JSON.parse(sessionStorage.getItem('LOGGED')) || false,
       
     },
     colorsPattern: {
@@ -195,6 +195,22 @@ const store = createStore({
       //   throw err;
       // })
     },
+    login({commit}, user) {
+      return axiosClient.post('/login', user).then(({data}) => {
+        commit('setUser', data);
+        return data;
+      }).catch((err) => {
+        throw err;
+      })
+    },
+    register({commit}, user) {
+      return axiosClient.post('/register', user).then(({data}) => {
+        commit('setUser', data);
+        return data;
+      }).catch((err) => {
+        throw err;
+      })
+    },
   },
   mutations: {
     setPostsLoading: (state, loading) => {
@@ -225,7 +241,27 @@ const store = createStore({
       state.posts.data.unshift(
         data
       )
-    }
+    },
+    setUser: (state, user) => {
+      const userData = { _id: user._id, name: user.name, email: user.email }
+      state.user.token = user.token;
+      state.user.data = userData;
+      state.user.logged = true;
+      sessionStorage.setItem('TOKEN', user.token);
+      sessionStorage.setItem('USER', JSON.stringify(userData));
+      sessionStorage.setItem('LOGGED', true);
+    },
+    logout: (state) => {
+      state.user.data = null;
+      state.user.token = null;
+      state.user.logged = false;
+      sessionStorage.removeItem('TOKEN');
+      sessionStorage.removeItem('USER');
+      sessionStorage.removeItem('LOGGED');
+      router.push({
+        name: "HomeView",
+      });
+    },
   },
   modules: {},
 })

@@ -242,6 +242,7 @@ article {
   display: flex;
   justify-content: center;
   margin: 5px;
+  height: 40px;
   gap: 10px;
 }
 @keyframes area-growing {

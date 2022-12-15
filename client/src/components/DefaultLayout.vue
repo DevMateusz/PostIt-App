@@ -12,6 +12,7 @@
             v-show="action.afterLogin === logged"
             :key="action.name"
             :to="action.to"
+            @click="action.event ? action.event() : ()=>{}"
             >{{ action.name }}</router-link
           >
         </div>
@@ -46,9 +47,14 @@ const actions = [
     class: "default_button",
     afterLogin: true,
     to: { name: "HomeView" },
+    event: logout,
   },
 ];
 const logged = computed(() => store.state.user.logged);
+
+function logout() {
+  store.commit('logout')
+}
 </script>
 
 <style scoped>
