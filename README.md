@@ -1,4 +1,4 @@
-# Surveys Fullstack Application
+# Post It Fullstack Application
 
 Application to publish any posts public with login and administration system
 
