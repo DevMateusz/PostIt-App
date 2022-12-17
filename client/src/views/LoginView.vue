@@ -11,7 +11,7 @@
   <form class="mt-8 space-y-6" @submit="login">
     <input type="hidden" name="remember" value="true" />
     <div class="credentials-container">
-      <AuthInput v-model="user.email" type="email" name="Email address">
+      <AuthInput v-model="user.email" type="text" name="Email address">
         <Mail
           class="credential-item__icon"
           :class="user.email ? 'credential-item__icon--filled' : ''"

@@ -2,34 +2,34 @@
   <article>
     <header>
       <div class="user_information">
-        <User :colorPattern="post.creatorColorPattern" />
-        <h2>{{ post.creatorName }}</h2>
+        <User :colorPattern="post.creator.colorPattern" />
+        <h2>{{ post.creator.name }}</h2>
       </div>
       <div class="actions_buttons">
-        <button @click="deletePost()" v-if="post.isOwner" class="svg_button">
+        <button @click="logged ? deletePost() : loginRequireAlert()" v-if="post.isOwner && logged" class="svg_button">
           <Delete />
         </button>
-        <button @click="edit = true" v-if="post.isOwner && !edit" class="svg_button">
+        <button @click="logged ? edit = true : loginRequireAlert()" v-if="post.isOwner && !edit && logged" class="svg_button">
           <Edit />
         </button>
-        <button @click="savePost()" v-if="post.isOwner && edit" class="svg_button">
+        <button @click="logged ? savePost(): loginRequireAlert()" v-if="post.isOwner && edit && logged" class="svg_button">
           <Save />
         </button>
         <button
-          @click="addToFriends()"
-          v-if="!post.isFriend && !post.isOwner"
+          @click="logged ? addToFriends() : loginRequireAlert()"
+          v-if="!post.isFriend && !post.isOwner && logged"
           class="svg_button"
         >
           <AddUser />
         </button>
         <button
-          @click="removeFromFriends()"
-          v-if="post.isFriend && !post.isOwner"
+          @click="logged ? removeFromFriends() : loginRequireAlert()"
+          v-if="post.isFriend && !post.isOwner && logged"
           class="svg_button"
         >
           <RemoveUser class="removeBtn" />
         </button>
-        <button @click="likeAction()" class="svg_button">
+        <button @click="logged ? likeAction(): loginRequireAlert()" class="svg_button">
           <Like :likes="post.likes" :class="post.isLiked ? 'liked' : 'like'" />
         </button>
       </div>
@@ -41,13 +41,13 @@
         {{ post.content }}
       </p>
       <textarea :rows="2" class="content_edit" v-else v-model="post.content"></textarea>
-      <h5>{{ calcDate(post.date) }}</h5>
+      <h5>{{ calcDate(post.createdAt) }}</h5>
     </div>
   </article>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import User from "../components/icons/User.vue";
 import Edit from "../components/icons/Edit.vue";
 import Delete from "../components/icons/Delete.vue";
@@ -58,6 +58,8 @@ import Like from "../components/icons/Like.vue";
 import store from "../store";
 
 let edit = ref(false);
+const logged = computed(() => store.state.user.logged);
+
 
 const props = defineProps({
   post: Object,
@@ -71,7 +73,7 @@ function calcDate(postCreated) {
     return `${Math.floor(secondSincePost / 3600)} Hours ago`;
   } else if (secondSincePost >= 60) {
     return `${Math.floor(secondSincePost / 60)} Minutes ago`;
-  } else if (secondSincePost > 0) {
+  } else if (secondSincePost > 1) {
     return `${Math.floor(secondSincePost)} Seconds ago`;
   } else {
     return `Just now`;
@@ -80,24 +82,33 @@ function calcDate(postCreated) {
 
 function likeAction() {
   if (props.post.isLiked) {
-    store.dispatch("dislikePost", props.post.id);
+    store.dispatch("dislikePost", props.post._id);
   } else {
-    store.dispatch("likePost", props.post.id);
+    store.dispatch("likePost", props.post._id);
   }
 }
 
+function loginRequireAlert() {
+  //Add alert here
+  console.log('Login to make this action');
+}
+
 function addToFriends() {
-  store.dispatch("addToFriends", props.post.creatorId);
+  store.dispatch("addToFriends", props.post.creator._id);
+  //Add alert here
+  console.log('User has been added to friends');
 }
 
 function removeFromFriends() {
-  store.dispatch("removeFromFrinds", props.post.creatorId);
+  store.dispatch("removeFromFrinds", props.post.creator._id);
+   //Add alert here
+   console.log('User has been removed to friends');
 }
 
 function savePost() {
   if (props.post.title && props.post.content) {
     store.dispatch("savePost", {
-      id: props.post.id,
+      id: props.post._id,
       title: props.post.title,
       content: props.post.content,
     });
@@ -110,7 +121,7 @@ function savePost() {
 
 function deletePost() {
   if (confirm("Are you sure? You wanna delete this post?")) {
-    store.dispatch("deletePost", props.post.id).then(() => {
+    store.dispatch("deletePost", props.post._id).then(() => {
       console.log("post was deleted"); // alert play here
     });
   }
@@ -124,6 +135,7 @@ article {
   flex-direction: column;
   border-radius: 5px;
   padding: 5px;
+  min-height: 240px;
 }
 header {
   width: 100%;

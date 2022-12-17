@@ -56,7 +56,7 @@
       style="animation: fade-in-out 0.5s ease-in-out both"
     />
   </div>
-  <div class="posts_container">
+  <div v-if="!loading" class="posts_container" :key="componentKey" >
     <PostListItem
       v-for="(post, index) in posts"
       :key="index"
@@ -65,6 +65,9 @@
       :style="`animation-delay: ${index * 0.1}s;`"
     />
   </div>
+  <div v-if="loading" class="loading">
+    <Loading class="loading__icon"/>
+    Loading</div>
 </template>
 
 <script setup>
@@ -72,6 +75,7 @@ import { ref, computed, reactive } from "vue";
 import { useRoute } from "vue-router";
 import store from "../store";
 
+import Loading from "../components/icons/Loading.vue"
 import PostListItem from "../components/PostListItem.vue";
 import CreatePost from "../components/CreatePost.vue";
 import Search from "../components/icons/Search.vue";
@@ -79,6 +83,7 @@ import Search from "../components/icons/Search.vue";
 const route = useRoute();
 
 const createNewPost = ref(false);
+const componentKey = ref(0)
 
 const sorts = [
   { name: "Latest", afterLogin: false },
@@ -91,9 +96,9 @@ const sorts = [
 
 const posts = computed(() => store.state.posts.data);
 const logged = computed(() => store.state.user.logged);
+const loading = computed(() => store.state.posts.loading);
 const newPost = reactive({});
 
-store.dispatch("getPosts");
 
 let sortSelect = ref("latest");
 let search = ref("");
@@ -109,8 +114,8 @@ function selectSort(value) {
 }
 
 function sendQuery() {
-  // store.dispatch("getPosts", {sort: value, search: search});
-  console.log({ sort: sortSelect.value, search: search.value.toLowerCase() });
+  store.dispatch("getPosts", {sort: sortSelect.value, search: search.value.toLowerCase()});
+  componentKey.value += 1;
 }
 
 function saveNewPost() {
@@ -119,7 +124,6 @@ function saveNewPost() {
       title: newPost.value.title,
       content: newPost.value.content,
     });
-    console.log({ title: newPost.value.title, content: newPost.value.content });
     newPost.value = "";
     createNewPost.value = false;
   } else {
@@ -140,6 +144,19 @@ sendQuery();
 </script>
 
 <style scoped>
+.loading{
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.loading__icon{
+  width: 36px;
+  height: 36px;
+}
 .posts_container {
   display: grid;
   gap: 14px;

@@ -19,7 +19,8 @@
       </div>
     </nav>
     <main style="animation: fade-in-out 0.5s ease-in-out both">
-      <router-view> </router-view>
+      <!-- <router-view> </router-view> -->
+      <HomeView :key="componentKey"/>
     </main>
   </div>
 </template>
@@ -27,8 +28,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import Logo from "../components/icons/Logo.vue";
+import HomeView from "../views/HomeView.vue"
 import store from "../store";
 
+const componentKey = ref(0);
 const actions = [
   {
     name: "Log In",
@@ -54,6 +57,7 @@ const logged = computed(() => store.state.user.logged);
 
 function logout() {
   store.commit('logout')
+  componentKey.value += 1;
 }
 </script>
 

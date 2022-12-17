@@ -5,6 +5,7 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
+const auth = require('./middleware/auth')
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const PORT = process.env.PORT || 5000;
@@ -17,6 +18,9 @@ app.use(express.json());
 
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
+app.use('/api/post', auth, require('./routes/api/post'));
+app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api/user', auth, require('./routes/api/user'));
 
 app.all('*', (req ,res) => {
   res.status(404);
