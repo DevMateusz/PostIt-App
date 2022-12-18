@@ -85,14 +85,14 @@ const route = useRoute();
 const createNewPost = ref(false);
 const componentKey = ref(0)
 
-const sorts = ref([
+const sorts = [
   { name: "Latest", afterLogin: false },
   { name: "Oldest", afterLogin: false },
   { name: "Most Likes", afterLogin: false },
   { name: "You Like", afterLogin: true },
   { name: "Your", afterLogin: true },
   { name: "Your Friends", afterLogin: true },
-]);
+];
 
 const posts = computed(() => store.state.posts.data);
 const logged = computed(() => store.state.user.logged);
@@ -104,7 +104,7 @@ let sortSelect = ref("latest");
 let search = ref("");
 
 function setSorts() {
-  return this.sorts.filter((sort) => {
+  return sorts.filter((sort) => {
     return sort.afterLogin === this.logged || sort.afterLogin === false;
   });
 }
