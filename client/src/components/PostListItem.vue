@@ -6,7 +6,7 @@
         <h2>{{ post.creator.name }}</h2>
       </div>
       <div class="actions_buttons">
-        <button @click="logged ? deletePost() : loginRequireAlert()" v-if="post.isOwner && logged" class="svg_button">
+        <button @click="logged ? deleteInforamtion() : loginRequireAlert()" @dblclick="logged ? deletePost() : loginRequireAlert()" v-if="post.isOwner && logged" class="svg_button">
           <Delete />
         </button>
         <button @click="logged ? edit = true : loginRequireAlert()" v-if="post.isOwner && !edit && logged" class="svg_button">
@@ -58,6 +58,7 @@ import Like from "../components/icons/Like.vue";
 import store from "../store";
 
 let edit = ref(false);
+let antiSpamer = ref(false);
 const logged = computed(() => store.state.user.logged);
 
 
@@ -82,27 +83,41 @@ function calcDate(postCreated) {
 
 function likeAction() {
   if (props.post.isLiked) {
+    props.post.isLiked = false;
+    props.post.likes -= 1
     store.dispatch("dislikePost", props.post._id);
   } else {
+    props.post.isLiked = true;
+    props.post.likes += 1
     store.dispatch("likePost", props.post._id);
   }
 }
 
 function loginRequireAlert() {
-  //Add alert here
-  console.log('Login to make this action');
+  store.commit("notify", {
+      type: "information",
+      message: "You must be logged in to this action",
+    });
 }
 
 function addToFriends() {
-  store.dispatch("addToFriends", props.post.creator._id);
-  //Add alert here
-  console.log('User has been added to friends');
+  store.dispatch("addToFriends", props.post.creator._id).then(() => {
+    store.commit("notify", {
+      type: "success",
+      message: `${props.post.creator.name} has been added to friends`,
+    });
+  })
+  
 }
 
 function removeFromFriends() {
-  store.dispatch("removeFromFrinds", props.post.creator._id);
-   //Add alert here
-   console.log('User has been removed to friends');
+  store.dispatch("removeFromFrinds", props.post.creator._id).then(() => {
+    store.commit("notify", {
+      type: "success",
+      message: `${props.post.creator.name} has been removed from friends`,
+    });
+  })
+  
 }
 
 function savePost() {
@@ -111,24 +126,48 @@ function savePost() {
       id: props.post._id,
       title: props.post.title,
       content: props.post.content,
-    });
-    console.log({ title: props.post.title, content: props.post.content });
+    }).then(() => {
+      store.commit("notify", {
+        type: "success",
+        message: "Post has been updated",
+      });
+  })
     edit.value = false;
   } else {
-    console.log("wrong data"); // alert o złych danych
+    store.commit("notify", {
+      type: "error",
+      message: "Post must include title and content",
+    });
   }
+}
+function deleteInforamtion() {
+  if(!antiSpamer.value){
+    store.commit("notify", {
+    type: "information",
+    message: "Double-click to delete a post",
+  });
+  antiSpamer.value = true;
+  setTimeout(() => {
+    antiSpamer.value = false
+  }, 2000); 
+  }
+  
 }
 
 function deletePost() {
-  if (confirm("Are you sure? You wanna delete this post?")) {
-    store.dispatch("deletePost", props.post._id).then(() => {
-      console.log("post was deleted"); // alert play here
+  store.dispatch("deletePost", props.post._id).then(() => {
+      store.commit("notify", {
+        type: "success",
+        message: "Post has been removed",
+      });
     });
-  }
 }
 </script>
 
 <style scoped>
+h2,h1,.content{
+  word-break: break-all;
+}
 article {
   background-color: var(--white);
   display: flex;
@@ -166,6 +205,7 @@ h1 {
 
 .user_information {
   display: flex;
+  gap: 10px;
   align-items: center;
 }
 button {

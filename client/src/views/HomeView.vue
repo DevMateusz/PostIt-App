@@ -123,11 +123,19 @@ function saveNewPost() {
     store.dispatch("savePost", {
       title: newPost.value.title,
       content: newPost.value.content,
+    }).then(() => {
+      store.commit("notify", {
+        type: "success",
+        message: "Post has been updated",
+      });
     });
     newPost.value = "";
     createNewPost.value = false;
   } else {
-    console.log("wrong data"); // alert o złych danych
+    store.commit("notify", {
+      type: "error",
+      message: "Post must include title and content",
+    });
   }
 }
 
@@ -172,6 +180,7 @@ button {
   text-decoration: none;
   border: none;
   border-radius: 5px;
+  color: var(--gray);
   background-color: var(--dark-white);
   padding: 8px 10px;
   transition: 0.1s;
@@ -191,9 +200,8 @@ nav {
 .selected {
   cursor: default;
   background-color: var(--green-1);
-  text-decoration: underline;
-  text-decoration-color: var(--white);
   color: var(--white);
+  font-weight: 600;
   transition: 0.1s;
 }
 article {
@@ -293,6 +301,7 @@ article {
     text-decoration: underline;
     text-decoration-color: var(--green-2);
     color: var(--green-2);
+    font-weight: 400;
     transition: 0.1s;
   }
   .posts_container {

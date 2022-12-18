@@ -28,6 +28,10 @@ const store = createStore({
       loading: false,
       data: []
     },
+    notifications: {
+      data: [],
+      index: 0
+    },
 
   },
   getters: {},
@@ -187,6 +191,14 @@ const store = createStore({
         name: "HomeView",
       });
     },
+    notify: (state, {message, type}) => {
+      const notificationId = state.notifications.index
+      state.notifications.index += 1
+      state.notifications.data.unshift({message, type, show: true, id: notificationId})
+      setTimeout(() => {
+        state.notifications.data = state.notifications.data.filter(notification => notification.id != notificationId)
+      }, 3000);
+    }
   },
   modules: {},
 })

@@ -9,4 +9,22 @@ axiosClient.interceptors.request.use(config => {
   return config;
 })
 
+axiosClient.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  switch (error.response.status) {
+    case 401:
+      store.commit('logout')
+      store.commit("notify", {
+        type: "information",
+        message: "Session expired log in again",
+      });
+      break;
+  
+    default:
+      break;
+  }
+  return Promise.reject(error);
+});
+
 export default axiosClient;
