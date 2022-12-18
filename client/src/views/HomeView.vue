@@ -105,12 +105,12 @@ let search = ref("");
 
 function setSorts() {
   return sorts.filter((sort) => {
-    return sort.afterLogin === this.logged || sort.afterLogin === false;
+    return sort.afterLogin === logged.value || sort.afterLogin === false;
   });
 }
 
 function selectSort(value) {
-  this.sortSelect = value;
+  sortSelect.value = value;
 }
 
 function sendQuery() {
