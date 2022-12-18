@@ -8,6 +8,3 @@
   import Notify from './components/Notify.vue';
 </script>
 
-<style scoped>
-
-</style>

@@ -13,13 +13,12 @@ const createPost = async(req, res) => {
       });
       const post = await newPost.populate({ path: 'creator', select: 'name colorPattern' });
       if(post){
-        console.log('Post saved');
         res.status(201).json({...JSON.parse(JSON.stringify(post)), likes: post.countLikes()});
       } else {
         return res.status(500).json({message: "Post cannot be saved"});
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Failed to create post' });
     }
   } else return res.status(400).json({message: "Title and content are required"});
@@ -39,8 +38,8 @@ const updatePost = async (req, res) => {
       post.content = content;
       await post.save();
       res.status(201).json({...JSON.parse(JSON.stringify(post)), likes: post.countLikes()});
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Failed to update post' });
     }
   } else {
@@ -58,8 +57,8 @@ const deletePost = async (req, res) => {
         return res.status(403).json({ message: 'Access denied' });
       }
       res.status(200).json({ id: post._id });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Failed to delete post' });
     }
   } else {
@@ -85,8 +84,8 @@ const likePost = async (req, res) => {
       await post.save();
       await userData.save();
       res.status(200).json({ id: post._id, likes: post.countLikes(), isLiked: true });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Failed to like post" });
     }
   } else {
@@ -112,8 +111,8 @@ const dislikePost = async (req, res) => {
       await post.save();
       await userData.save();
       res.status(200).json({ id: post._id, likes: post.countLikes(), isLiked: false });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Failed to dislike post" });
     }
   } else {

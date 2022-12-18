@@ -2,9 +2,7 @@
   <div class="screen">
     <nav style="animation: fade-in-out 0.5s ease-in-out both">
       <div class="menu">
-        <div class="logo">
-          <Logo size="4" />
-        </div>
+        <img class="logo" src="/src/assets/logoLight.svg" alt="Logo Post It" />
         <div class="actions">
           <router-link
             :class="action.class"
@@ -19,7 +17,6 @@
       </div>
     </nav>
     <main style="animation: fade-in-out 0.5s ease-in-out both">
-      <!-- <router-view> </router-view> -->
       <HomeView :key="componentKey"/>
     </main>
   </div>
@@ -27,7 +24,6 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import Logo from "../components/icons/Logo.vue";
 import HomeView from "../views/HomeView.vue"
 import store from "../store";
 
@@ -67,7 +63,7 @@ function logout() {
 
 <style scoped>
 .screen {
-  height: 100%;
+  height: 101vh;
   width: 100%;
 }
 .menu,
@@ -81,7 +77,13 @@ main {
   justify-content: space-between;
   padding-right: 1rem;
   padding-left: 1rem;
+  align-items: center;
+  height: 70px;
 }
+.logo{
+  height: 85%;
+}
+
 main {
   flex-direction: column;
   padding-right: 0rem;
@@ -90,8 +92,7 @@ main {
 nav {
   background-color: var(--gray);
 }
-.actions,
-.logo {
+.actions{
   display: flex;
   place-items: center;
   gap: 10px;

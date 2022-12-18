@@ -45,14 +45,12 @@ const notifications = computed(() => store.state.notifications.data);
 }
 .notification{
   color: var(--dark-white);
-  background-color: red;
   font-weight: 700;
   display: flex;
   align-items: center;
   padding: 5px 10px;
   gap: 5px;
   border-radius: 5px;
-  box-shadow: 0px 0px 100px red;
 }
 .notification__icon{
   width: 30px;

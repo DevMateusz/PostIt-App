@@ -21,7 +21,6 @@
   align-items: flex-start;
 }
 img {
-  width: 100px;
   height: 100px;
 }
 .container {

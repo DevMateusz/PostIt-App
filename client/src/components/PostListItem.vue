@@ -166,7 +166,7 @@ function deletePost() {
 
 <style scoped>
 h2,h1,.content{
-  word-break: break-all;
+  word-break: break-word;
 }
 article {
   background-color: var(--white);

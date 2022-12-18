@@ -1,12 +1,14 @@
 const User = require('../model/User');
 
 const addToFriends = async(req, res) => {
-  console.log('add');
   const friendId = req.params.id;
   const userId = req.user.id;
   if (friendId) {
     try {
       const user = await User.findOne({ _id: userId });
+      if (userId == friendId) {
+        return res.status(404).json({ message: "You cannot add yourself to friends" });
+      }
       if (!user) {
         return res.status(404).json({ message: "User with the given ID was not found" });
       }
@@ -16,8 +18,8 @@ const addToFriends = async(req, res) => {
       user.friends.push(friendId);
       await user.save();
       res.status(200).json({ creatorId: friendId, isFriend: true });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Failed to add to friends" });
     }
   } else {
@@ -26,7 +28,6 @@ const addToFriends = async(req, res) => {
 }
 
 const removeFromFriends = async(req, res) => {
-  console.log('remove');
   const friendId = req.params.id;
   const userId = req.user.id;
   if (friendId) {
@@ -41,8 +42,8 @@ const removeFromFriends = async(req, res) => {
       user.friends = user.friends.filter(friend => !friend.equals(friendId))
       await user.save();
       res.status(200).json({ creatorId: friendId, isFriend: false });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Failed to remove from friends" });
     }
   } else {

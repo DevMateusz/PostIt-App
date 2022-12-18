@@ -33,7 +33,13 @@ const routes = [
         component: RegisterView
       },
     ]
-  }
+  },
+  { 
+    path: '/:pathMatch(.*)*',
+    redirect: '/home',
+    name: 'NotFound',
+    component: HomeView,
+  },
 ]
 
 
