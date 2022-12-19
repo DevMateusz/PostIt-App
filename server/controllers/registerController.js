@@ -10,14 +10,17 @@ const createNewUser = async (req, res) => {
       return res.status(400).json({"message": "All input is required"});
     }
 
-    if(password !== passwordConfirmation){
-      return res.status(422).json({"message": "Password are not the same"});
-    }
-
     const userExist = await User.findOne({ email: lowerCaseEmail });
-
     if(userExist) {
       return res.status(422).json({"message": "User already exists"});
+    }
+
+    if(password !== passwordConfirmation){
+      return res.status(422).json({"message": "Passwords are not the same"});
+    }
+
+    if(validatePassword(password)<3) {
+      return res.status(422).json({"message": "Password is too weak"});
     }
 
     encryptedPassword = bcrypt.hashSync(password, 10);
@@ -35,6 +38,26 @@ const createNewUser = async (req, res) => {
   } catch(err) {
     console.error(err);
   }
+}
+
+function validatePassword(password) {
+  let strength = 0;
+  if (/(?=(.*[a-z]){1,})/g.test(password)) {
+    strength += 1;
+  }
+  if (/(?=(.*[A-Z]){1,})/g.test(password)) {
+    strength += 1;
+  }
+  if (/(?=(.*[0-9]){1,})/g.test(password)) {
+    strength += 1;
+  }
+  if (/(?=(.*[!@#$%^&*()\-_+.]){1,})/g.test(password)) {
+    strength += 1;
+  }
+  if (/.{8,}/g.test(password)) {
+    strength += 1;
+  }
+  return strength;
 }
 
 module.exports = { createNewUser };
