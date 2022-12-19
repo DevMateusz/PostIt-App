@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="52" height="28" viewBox="0 0 52 28">
   <g id="darkLogo" transform="translate(-1010 -450.938)">
-    <text id="POSTIT" transform="translate(1010 473.938)" fill="#272727" font-size="13" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0">POST</tspan><tspan y="0" fill="#16a34a" font-size="21">IT</tspan></text>
+    <text id="POSTIT" transform="translate(1010 473.938)" fill="#272727" font-size="13" font-family="Segoe UI, Arial" font-weight="700"><tspan x="0" y="0">POST</tspan><tspan y="0" fill="#16a34a" font-size="21">IT</tspan></text>
     <path id="Path_1" data-name="Path 1" d="M0,.61,31.664,5.039V8.71H0Z" transform="translate(1011 454.151)" fill="#16a34a"/>
   </g>
 </svg>

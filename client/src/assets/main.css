@@ -17,6 +17,19 @@
   --blue-1: #2563eb;
 }
 
+@font-face {
+  font-family: 'Segoe UI Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Segoe UI Bold'), url('Segoe UI Bold.woff') format('woff');
+  }
+  @font-face {
+    font-family: 'Segoe UI';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Segoe UI'), url('Segoe UI.woff') format('woff');
+    }
+
 *,
 *::before,
 *::after {
