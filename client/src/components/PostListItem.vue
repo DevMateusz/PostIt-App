@@ -34,8 +34,10 @@
         </button>
       </div>
     </header>
-    <h1 v-if="!edit">{{ post.title }}</h1>
-    <input class="title_edit" v-else type="text" v-model="post.title" />
+    <div class="edit">
+      <h1 v-if="!edit">{{ post.title }}</h1>
+      <input class="title_edit" v-else type="text" v-model="post.title" />
+    </div>
     <div class="content">
       <p v-if="!edit">
         {{ post.content }}
@@ -190,14 +192,18 @@ header h2 {
 h1 {
   font-weight: 600;
   font-size: 26px;
-  padding: 5px 5px 0px 5px;
 }
-.content {
+.content{
   padding: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
+}
+.edit{
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
 }
 .content h5 {
   font-weight: 300;
@@ -238,15 +244,16 @@ button svg {
 .content_edit {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  width: 100%;
+    
 }
 .title_edit {
   font-size: 26px;
   font-weight: 600;
-  margin: 5px;
+  padding: 5px;
 }
 .content_edit {
   font-size: 16px;
-  width: 100%;
   min-height: 8em;
   resize: none;
   padding: 5px;

@@ -4,7 +4,7 @@
     Or
     <router-link :to="{ name: 'LoginView' }"> login to your account </router-link>
   </p>
-  <div v-if="error" class="error">
+  <div v-if="error" class="error" style="animation: fade-in-out 0.5s ease-in-out both">
     {{ error }}
     <X class="error__x" @click="error = ''" />
   </div>

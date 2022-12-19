@@ -1,7 +1,7 @@
 <template>
   <div class="credential-item">
     <label for="password" class="screen-read-only">{{ name }}</label>
-    <input :name="type" :type="type" :placeholder="name" v-model="value" />
+    <input :name="type" :type="type" :placeholder="name" v-model="value" required />
     <slot> </slot>
   </div>
 </template>

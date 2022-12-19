@@ -4,14 +4,14 @@
     Or
     <router-link :to="{ name: 'RegisterView' }"> register for free </router-link>
   </p>
-  <div v-if="error" class="error">
+  <div v-if="error" class="error" style="animation: fade-in-out 0.5s ease-in-out both">
     {{ error }}
     <X class="error__x" @click="error = ''" />
   </div>
   <form class="mt-8 space-y-6" @submit="login">
     <input type="hidden" name="remember" value="true" />
     <div class="credentials-container">
-      <AuthInput v-model="user.email" type="text" name="Email address">
+      <AuthInput v-model="user.email" type="email" name="Email address">
         <Mail
           class="credential-item__icon"
           :class="user.email ? 'credential-item__icon--filled' : ''"
