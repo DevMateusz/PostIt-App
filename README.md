@@ -22,6 +22,6 @@ An application for publishing, editing, deleting and viewing user posts. Users c
 
 
 ## Demo
-due to the fact that the demo runs on free hosting pryz first time you have to wait a while for the server to turn on.
+due to the fact that the demo runs on free hosting at the first time you have to wait a while for the server to turn on.
 
 https://postit-app.onrender.com
