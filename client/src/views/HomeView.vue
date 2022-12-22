@@ -135,7 +135,7 @@ function saveNewPost() {
       .then(() => {
         store.commit("notify", {
           type: "success",
-          message: "Post has been updated",
+          message: "Post has been saved",
         });
       });
     newPost.value = "";
