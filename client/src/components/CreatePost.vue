@@ -1,15 +1,20 @@
 <template>
-  <article>
-    <label for="title">Title</label>
-    <input name="title" class="title_edit" type="text" v-model="model.title" />
-    <label for="content">Content</label>
+  <div class="create-post">
+    <label for="title" class="create-post__label">Title</label>
+    <input
+      name="title"
+      class="create-post__title-edit"
+      type="text"
+      v-model="model.title"
+    />
+    <label for="content" class="create-post__label">Content</label>
     <textarea
       name="content"
       :rows="2"
-      class="content_edit"
+      class="create-post__content-edit"
       v-model="model.content"
     ></textarea>
-  </article>
+  </div>
 </template>
 
 <script setup>
@@ -28,7 +33,7 @@ watch(model, (newVal, oldVal) => {
 </script>
 
 <style scoped>
-article {
+.create-post {
   background-color: var(--white);
   display: flex;
   flex-direction: column;
@@ -36,28 +41,34 @@ article {
   padding: 5px;
 }
 
-.title_edit,
-.content_edit {
+.create-post__title-edit,
+.create-post__content-edit {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
-.title_edit {
+.create-post__title-edit {
   font-size: 26px;
   font-weight: 600;
   margin: 5px;
 }
-.content_edit {
+.create-post__content-edit {
   font-size: 16px;
   min-height: 8em;
   resize: none;
   margin: 5px;
 }
-label {
+.create-post__label {
   margin-left: 10px;
 }
 
 @media (min-width: 768px) {
-  article {
+  .create-post {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .create-post {
     width: 700px;
   }
 }

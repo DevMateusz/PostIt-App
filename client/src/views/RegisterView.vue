@@ -1,32 +1,38 @@
 <template>
-  <h2>Register for free</h2>
-  <p class="auth-swap">
+  <h2 class="sign-up__heading">Register for free</h2>
+  <p class="sign-up__auth-swap">
     Or
-    <router-link :to="{ name: 'LoginView' }"> login to your account </router-link>
+    <router-link :to="{ name: 'LoginView' }" class="sign-up__login-link">
+      login to your account
+    </router-link>
   </p>
-  <div v-if="error" class="error" style="animation: fade-in-out 0.5s ease-in-out both">
+  <div
+    v-if="error"
+    class="sign-up__error"
+    style="animation: fade-in-out 0.5s ease-in-out both"
+  >
     {{ error }}
-    <X class="error__x" @click="error = ''" />
+    <X class="sign-up__error-x" @click="error = ''" />
   </div>
-  <form @submit="register">
+  <form class="sign-up__form" @submit="register">
     <input type="hidden" name="remember" value="true" />
-    <div class="credentials-container">
+    <div class="sign-up__credentials-container">
       <AuthInput v-model="user.name" type="text" name="Name">
         <User
-          class="credential-item__icon"
-          :class="user.name ? 'credential-item__icon--filled' : ''"
+          class="sign-up__credential-item-icon"
+          :class="user.name ? 'sign-up__credential-item-icon--filled' : ''"
         />
       </AuthInput>
       <AuthInput v-model="user.email" type="email" name="Email address">
         <Mail
-          class="credential-item__icon"
-          :class="user.email ? 'credential-item__icon--filled' : ''"
+          class="sign-up__credential-item-icon"
+          :class="user.email ? 'sign-up__credential-item-icon--filled' : ''"
         />
       </AuthInput>
       <AuthInput v-model="user.password" type="password" name="Password">
         <Lock
-          class="credential-item__icon"
-          :class="user.password ? 'credential-item__icon--filled' : ''"
+          class="sign-up__credential-item-icon"
+          :class="user.password ? 'sign-up__credential-item-icon--filled' : ''"
         />
       </AuthInput>
       <AuthInput
@@ -35,12 +41,14 @@
         name="Password confirmation"
       >
         <Lock
-          class="credential-item__icon"
-          :class="user.passwordConfirmation ? 'credential-item__icon--filled' : ''"
+          class="sign-up__credential-item-icon"
+          :class="
+            user.passwordConfirmation ? 'sign-up__credential-item-icon--filled' : ''
+          "
         />
       </AuthInput>
       <span
-        class="password-strength"
+        class="sign-up__credential-item--password-strength"
         :style="[
           passwordStrength >= 3 && passwordStrength <= 4
             ? 'background-color: orange'
@@ -50,10 +58,10 @@
         ]"
       ></span>
     </div>
-    <div class="colors-container">
+    <div class="sign-up__colors-container">
       <input
         required
-        class="color-pattern"
+        class="sign-up__color-item"
         v-for="(color, index) in colorsPattern"
         type="radio"
         name="color"
@@ -64,18 +72,20 @@
     </div>
     <div>
       <button
-        class="action-button"
-        :class="loading ? 'action-button--disable' : ''"
+        class="sign-up__action-button"
+        :class="loading ? 'sign-up__action-button--disable' : ''"
         :disabled="loading"
         type="submit"
       >
-        <Loading v-if="loading" class="action-button__loading" />
+        <Loading v-if="loading" class="sign-up__action-button--loading" />
         Sign up
       </button>
     </div>
   </form>
-  <div class="home-back">
-    <router-link :to="{ name: 'HomeView' }"> Go back home </router-link>
+  <div class="sign-up__home-back">
+    <router-link :to="{ name: 'HomeView' }" class="sign-up__home-back--link">
+      Go back home
+    </router-link>
   </div>
 </template>
 
@@ -162,10 +172,10 @@ function register(event) {
 </script>
 
 <style scoped>
-.credential-item:hover > .credential-item__icon {
+.credential-item:hover > .sign-up__credential-item-icon {
   transform: translateY(-10%);
 }
-.credential-item__icon {
+.sign-up__credential-item-icon {
   width: 20px;
   height: 20px;
   position: absolute;
@@ -174,10 +184,10 @@ function register(event) {
   color: var(--weak-gray);
   transition: 0.2s;
 }
-.credential-item__icon--filled {
+.sign-up__credential-item-icon--filled {
   color: var(--gray);
 }
-.password-strength {
+.sign-up__credential-item--password-strength {
   height: 4px;
   max-width: 96%;
   border-radius: 3px;
@@ -186,43 +196,32 @@ function register(event) {
   transform: translateY(-60%);
   transition: 0.2s;
 }
-.screen-read-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-h2 {
+.sign-up__heading {
   font-size: 30px;
   font-weight: 700;
   padding: 0px 20px;
   text-align: center;
 }
-.home-back {
+.sign-up__home-back {
   width: 100%;
   display: flex;
   justify-content: end;
 }
-.auth-swap a,
-.home-back a {
+.sign-up__login-link,
+.sign-up__home-back--link {
   color: var(--green-2);
   transition: 0.1s;
   font-weight: 500;
 }
-.home-back a {
+.sign-up__home-back--link {
   font-size: 12px;
   text-align: right;
   padding: 10px;
 }
-.auth-swap a:hover {
+.sign-up__login-link:hover {
   color: var(--green-1);
 }
-.error {
+.sign-up__error {
   background-color: var(--red-1);
   color: var(--white);
   width: 100%;
@@ -232,7 +231,7 @@ h2 {
   padding-right: 40px;
   position: relative;
 }
-.error__x {
+.sign-up__error-x {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -242,30 +241,30 @@ h2 {
   cursor: pointer;
   transition: 0.1s;
 }
-.error__x:hover {
+.sign-up__error-x:hover {
   background-color: var(--red-2);
 }
-form {
+.sign-up__form {
   margin-top: 25px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 100%;
 }
-.credentials-container {
+.sign-up__credentials-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.colors-container {
+.sign-up__colors-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 
   gap: 8px;
 }
-.color-pattern {
+.sign-up__color-item {
   width: 36px;
   height: 36px;
   border-radius: 40%;
@@ -274,8 +273,8 @@ form {
   transition: 0.2s;
   cursor: pointer;
 }
-.color-pattern:checked,
-.color-pattern:checked:hover {
+.sign-up__color-item:checked,
+.sign-up__color-item:checked:hover {
   border: 3px solid var(--current);
   appearance: none;
   transform: scale(130%);
@@ -284,11 +283,11 @@ form {
   cursor: pointer;
 }
 
-.color-pattern:hover {
+.sign-up__color-item:hover {
   transform: scale(110%);
 }
 
-.action-button {
+.sign-up__action-button {
   height: 41px;
   justify-content: center;
   display: flex;
@@ -303,14 +302,14 @@ form {
   cursor: pointer;
   transition: 0.1s;
 }
-.action-button:hover {
+.sign-up__action-button:hover {
   background-color: var(--green-2);
 }
-.action-button--disable:hover {
+.sign-up__action-button--disable:hover {
   cursor: not-allowed;
   background-color: var(--green-5);
 }
-.action-button__loading {
+.sign-up__action-button--loading {
   height: 21px;
   width: 21px;
   margin-right: 5px;

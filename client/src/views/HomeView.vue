@@ -1,16 +1,20 @@
 <template>
   <nav>
-    <div v-for="(sort, index) in setSorts()" class="sort_element">
+    <div v-for="(sort, index) in setSorts()" class="sort__element">
       <button
         @click="
           selectSort(sort.name.toLowerCase());
           sendQuery();
         "
-        :class="sortSelect.toLowerCase() == sort.name.toLowerCase() ? 'selected' : ''"
+        :class="
+          sortSelect.toLowerCase() == sort.name.toLowerCase()
+            ? 'sort__element--selected'
+            : ''
+        "
       >
         {{ sort.name }}
       </button>
-      <div v-if="index < setSorts().length - 1" class="separator"></div>
+      <div v-if="index < setSorts().length - 1" class="sort__separator"></div>
     </div>
   </nav>
   <div class="function-container--not-logged" v-if="!logged">
@@ -19,22 +23,22 @@
         v-model="search"
         type="search"
         name="search"
-        class="search"
+        class="function-container__search"
         autocomplete="off"
       />
-      <Search @click="sendQuery()" class="search_icon" />
+      <Search @click="sendQuery()" class="function-container__search-icon" />
     </div>
   </div>
-  <div class="function_container" v-if="logged">
-    <div class="search_container">
+  <div class="function-container" v-if="logged">
+    <div class="search-container">
       <input
         v-model="search"
         type="search"
         name="search"
-        class="search"
+        class="function-container__search"
         autocomplete="off"
       />
-      <Search @click="sendQuery()" class="search_icon" />
+      <Search @click="sendQuery()" class="function-container__search-icon" />
     </div>
     <button
       class="btn btn--save-post"
@@ -50,13 +54,13 @@
       Cancel
     </button>
   </div>
-  <div v-if="createNewPost" class="create_post_container">
+  <div v-if="createNewPost" class="create-post-container">
     <CreatePost
       @update-data-new-post="updateDataNewPost"
       style="animation: fade-in-out 0.5s ease-in-out both"
     />
   </div>
-  <div v-if="!loading" class="posts_container" :key="componentKey" >
+  <div v-if="!loading" class="posts-container" :key="componentKey">
     <PostListItem
       v-for="(post, index) in posts"
       :key="index"
@@ -66,8 +70,9 @@
     />
   </div>
   <div v-if="loading" class="loading">
-    <Loading class="loading__icon"/>
-    Loading</div>
+    <Loading class="loading__icon" />
+    Loading
+  </div>
 </template>
 
 <script setup>
@@ -75,7 +80,7 @@ import { ref, computed, reactive } from "vue";
 import { useRoute } from "vue-router";
 import store from "../store";
 
-import Loading from "../components/icons/Loading.vue"
+import Loading from "../components/icons/Loading.vue";
 import PostListItem from "../components/PostListItem.vue";
 import CreatePost from "../components/CreatePost.vue";
 import Search from "../components/icons/Search.vue";
@@ -83,7 +88,7 @@ import Search from "../components/icons/Search.vue";
 const route = useRoute();
 
 const createNewPost = ref(false);
-const componentKey = ref(0)
+const componentKey = ref(0);
 
 const sorts = [
   { name: "Latest", afterLogin: false },
@@ -99,7 +104,6 @@ const logged = computed(() => store.state.user.logged);
 const loading = computed(() => store.state.posts.loading);
 const newPost = reactive({});
 
-
 let sortSelect = ref("latest");
 let search = ref("");
 
@@ -114,21 +118,26 @@ function selectSort(value) {
 }
 
 function sendQuery() {
-  store.dispatch("getPosts", {sort: sortSelect.value, search: search.value.toLowerCase()});
+  store.dispatch("getPosts", {
+    sort: sortSelect.value,
+    search: search.value.toLowerCase(),
+  });
   componentKey.value += 1;
 }
 
 function saveNewPost() {
   if (newPost.value.title && newPost.value.content) {
-    store.dispatch("savePost", {
-      title: newPost.value.title,
-      content: newPost.value.content,
-    }).then(() => {
-      store.commit("notify", {
-        type: "success",
-        message: "Post has been updated",
+    store
+      .dispatch("savePost", {
+        title: newPost.value.title,
+        content: newPost.value.content,
+      })
+      .then(() => {
+        store.commit("notify", {
+          type: "success",
+          message: "Post has been updated",
+        });
       });
-    });
     newPost.value = "";
     createNewPost.value = false;
   } else {
@@ -152,7 +161,7 @@ sendQuery();
 </script>
 
 <style scoped>
-.loading{
+.loading {
   text-align: center;
   font-size: 30px;
   font-weight: 600;
@@ -161,18 +170,18 @@ sendQuery();
   align-items: center;
   gap: 5px;
 }
-.loading__icon{
+.loading__icon {
   width: 36px;
   height: 36px;
 }
-.posts_container {
+.posts-container {
   display: grid;
   gap: 14px;
 }
-.sort_element {
+.sort__element {
   display: flex;
 }
-.sort_element div {
+.sort__element div {
   display: none;
 }
 button {
@@ -185,7 +194,7 @@ button {
   padding: 8px 10px;
   transition: 0.1s;
 }
-.separator {
+.sort__separator {
   width: 2px;
   height: 20px;
   background-color: var(--gray);
@@ -197,7 +206,7 @@ nav {
   justify-content: space-between;
   gap: 4px;
 }
-.selected {
+.sort__element--selected {
   cursor: default;
   background-color: var(--green-1);
   color: var(--white);
@@ -207,19 +216,19 @@ nav {
 article {
   background-color: white;
 }
-.function_container {
+.function-container {
   display: flex;
   margin: 5px;
   gap: 10px;
   flex-direction: column;
 }
-.search_container {
+.search-container {
   display: flex;
   justify-content: center;
   flex: 1;
 }
 
-.search {
+.function-container__search {
   flex: 1;
   height: 35px;
   font-size: 19px;
@@ -240,13 +249,13 @@ article {
 .btn--save-post:hover {
   background-color: var(--gray);
 }
-.search_icon {
+.function-container__search-icon {
   width: 35px;
   height: 35px;
   margin: 0px 5px;
   cursor: pointer;
 }
-.create_post_container {
+.create-post-container {
   margin-bottom: 15px;
   height: 0px;
   animation: area-growing 0.4s ease-in-out both alternate;
@@ -282,7 +291,7 @@ article {
 }
 
 @media (min-width: 768px) {
-  .search_container {
+  .search-container {
     justify-content: start;
   }
   nav {
@@ -295,7 +304,7 @@ article {
     border: none;
     border-radius: 5px;
   }
-  .selected {
+  .sort__element--selected {
     background-color: transparent;
     cursor: default;
     text-decoration: underline;
@@ -304,31 +313,31 @@ article {
     font-weight: 400;
     transition: 0.1s;
   }
-  .posts_container {
+  .posts-container {
     grid-template-columns: 1fr 1fr;
   }
   nav {
     justify-content: flex-end;
     gap: 10px;
   }
-  .sort_element {
+  .sort__element {
     align-items: center;
     gap: 10px;
   }
-  .sort_element div {
+  .sort__element div {
     display: inline-block;
   }
-  .function_container {
+  .function-container {
     justify-content: flex-end;
     flex-direction: row;
     position: relative;
   }
 
-  .search {
+  .function-container__search {
     flex: none;
     width: 350px;
   }
-  .create_post_container {
+  .create-post-container {
     display: flex;
     justify-content: center;
   }
@@ -339,12 +348,12 @@ article {
   }
 }
 @media (min-width: 1024px) {
-  .search_container {
+  .search-container {
     position: absolute;
     justify-content: center;
     left: 35%;
   }
-  .search_container .search {
+  .search-container .search {
     width: 350px;
   }
 }

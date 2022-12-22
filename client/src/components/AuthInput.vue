@@ -1,7 +1,14 @@
 <template>
   <div class="credential-item">
-    <label for="password" class="screen-read-only">{{ name }}</label>
-    <input :name="type" :type="type" :placeholder="name" v-model="value" required />
+    <label for="password" class="credential-item__lable">{{ name }}</label>
+    <input
+      class="credential-item__input"
+      :name="type"
+      :type="type"
+      :placeholder="name"
+      v-model="value"
+      required
+    />
     <slot> </slot>
   </div>
 </template>
@@ -27,7 +34,7 @@ watch(
 .credential-item {
   position: relative;
 }
-.screen-read-only {
+.credential-item__lable {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -38,7 +45,7 @@ watch(
   white-space: nowrap;
   border-width: 0;
 }
-input {
+.credential-item__input {
   font-size: 15px;
   border: none;
   background-color: var(--white-gray);

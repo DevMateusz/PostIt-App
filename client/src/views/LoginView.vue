@@ -1,55 +1,63 @@
 <template>
-  <h2>Sign in to your account</h2>
-  <p class="auth-swap">
+  <h2 class="sign-in__heading">Sign in to your account</h2>
+  <p class="sign-in__auth-swap">
     Or
-    <router-link :to="{ name: 'RegisterView' }"> register for free </router-link>
+    <router-link :to="{ name: 'RegisterView' }" class="sign-in__register-link">
+      register for free
+    </router-link>
   </p>
-  <div v-if="error" class="error" style="animation: fade-in-out 0.5s ease-in-out both">
+  <div
+    v-if="error"
+    class="sign-in__error"
+    style="animation: fade-in-out 0.5s ease-in-out both"
+  >
     {{ error }}
-    <X class="error__x" @click="error = ''" />
+    <X class="sign-in__error-x" @click="error = ''" />
   </div>
-  <form class="mt-8 space-y-6" @submit="login">
+  <form class="sign-in__form" @submit="login">
     <input type="hidden" name="remember" value="true" />
-    <div class="credentials-container">
+    <div class="sign-in__credentials-container">
       <AuthInput v-model="user.email" type="email" name="Email address">
         <Mail
-          class="credential-item__icon"
-          :class="user.email ? 'credential-item__icon--filled' : ''"
+          class="sign-in__credential-item-icon"
+          :class="user.email ? 'sign-in__credential-item-icon--filled' : ''"
         />
       </AuthInput>
       <AuthInput v-model="user.password" type="password" name="Password">
         <Lock
-          class="credential-item__icon"
-          :class="user.password ? 'credential-item__icon--filled' : ''"
+          class="sign-in__credential-item-icon"
+          :class="user.password ? 'sign-in__credential-item-icon--filled' : ''"
         />
       </AuthInput>
     </div>
 
-    <div class="remember-me">
+    <div class="sign-in__remember-me">
       <input
         id="remember-me"
         name="remember-me"
         type="checkbox"
-        class="remember-me--checkbox"
+        class="sign-in__remember-me--checkbox"
         v-model="user.remember"
       />
-      <label class="remember-me--text" for="remember-me">Remember me</label>
+      <label class="sign-in__remember-me--text" for="remember-me">Remember me</label>
     </div>
 
     <div>
       <button
-        class="action-button"
-        :class="loading ? 'action-button--disable' : ''"
+        class="sign-in__action-button"
+        :class="loading ? 'sign-in__action-button--disable' : ''"
         :disabled="loading"
         type="submit"
       >
-        <Loading v-if="loading" class="action-button__loading" />
+        <Loading v-if="loading" class="sign-in__action-button--loading" />
         Sign in
       </button>
     </div>
   </form>
-  <div class="home-back">
-    <router-link :to="{ name: 'HomeView' }"> Go back home </router-link>
+  <div class="sign-in__home-back">
+    <router-link :to="{ name: 'HomeView' }" class="sign-in__home-back--link">
+      Go back home
+    </router-link>
   </div>
 </template>
 
@@ -94,10 +102,10 @@ function login(event) {
 </script>
 
 <style scoped>
-.credential-item:hover > .credential-item__icon {
+.credential-item:hover > .sign-in__credential-item-icon {
   transform: translateY(-10%);
 }
-.credential-item__icon {
+.sign-in__credential-item-icon {
   width: 20px;
   height: 20px;
   position: absolute;
@@ -106,35 +114,35 @@ function login(event) {
   color: var(--weak-gray);
   transition: 0.2s;
 }
-.credential-item__icon--filled {
+.sign-in__credential-item-icon--filled {
   color: var(--gray);
 }
-h2 {
+.sign-in__heading {
   font-size: 30px;
   font-weight: 700;
   padding: 0px 20px;
   text-align: center;
 }
-.home-back {
+.sign-in__home-back {
   width: 100%;
   display: flex;
   justify-content: end;
 }
-.auth-swap a,
-.home-back a {
+.sign-in__register-link,
+.sign-in__home-back--link {
   color: var(--green-2);
   transition: 0.1s;
   font-weight: 500;
 }
-.home-back a {
+.sign-in__home-back--link {
   font-size: 12px;
   text-align: right;
   padding: 10px;
 }
-.auth-swap a:hover {
+.sign-in__register-link:hover {
   color: var(--green-1);
 }
-.error {
+.sign-in__error {
   background-color: var(--red-1);
   color: var(--white);
   width: 100%;
@@ -144,7 +152,7 @@ h2 {
   padding-right: 40px;
   position: relative;
 }
-.error__x {
+.sign-in__error-x {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -154,26 +162,26 @@ h2 {
   cursor: pointer;
   transition: 0.1s;
 }
-.error__x:hover {
+.sign-in__error-x:hover {
   background-color: var(--red-2);
 }
-form {
+.sign-in__form {
   margin-top: 25px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 100%;
 }
-.credentials-container {
+.sign-in__credentials-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-.remember-me {
+.sign-in__remember-me {
   display: flex;
   align-items: center;
 }
-.remember-me--checkbox {
+.sign-in__remember-me--checkbox {
   width: 25px;
   height: 25px;
   border-radius: 40%;
@@ -183,13 +191,13 @@ form {
   transition: 0.2s;
   cursor: pointer;
 }
-.remember-me--checkbox:checked {
+.sign-in__remember-me--checkbox:checked {
   background-color: var(--green-1);
 }
-.remember-me--text {
+.sign-in__remember-me--text {
   margin-left: 10px;
 }
-.action-button {
+.sign-in__action-button {
   height: 41px;
   justify-content: center;
   display: flex;
@@ -204,14 +212,14 @@ form {
   cursor: pointer;
   transition: 0.1s;
 }
-.action-button:hover {
+.sign-in__action-button:hover {
   background-color: var(--green-2);
 }
-.action-button--disable:hover {
+.sign-in__action-button--disable:hover {
   cursor: not-allowed;
   background-color: var(--green-5);
 }
-.action-button__loading {
+.sign-in__action-button--loading {
   height: 21px;
   width: 21px;
   margin-right: 5px;

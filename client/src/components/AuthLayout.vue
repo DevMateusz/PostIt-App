@@ -1,8 +1,8 @@
 <template>
   <div class="screen">
-    <div class="container" style="animation: fade-in-out 0.5s ease-in-out both">
-      <router-link :to="{ name: 'HomeView' }">
-        <img src="/src/assets/logo.svg" alt="Logo Post It" />
+    <div class="main" style="animation: fade-in-out 0.5s ease-in-out both">
+      <router-link class="auth-link" :to="{ name: 'HomeView' }">
+        <img src="/src/assets/logo.svg" alt="Logo Post It" class="auth-link__logo" />
       </router-link>
       <router-view></router-view>
     </div>
@@ -20,10 +20,10 @@
   justify-content: center;
   align-items: flex-start;
 }
-img {
+.auth-link__logo {
   height: 100px;
 }
-.container {
+.main {
   max-width: 100%;
   padding: 20px;
   display: flex;
@@ -32,7 +32,7 @@ img {
   flex: 1;
 }
 @media (min-width: 768px) {
-  .container {
+  .main {
     margin-top: 50px;
     max-width: 450px;
   }
